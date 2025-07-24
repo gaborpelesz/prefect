@@ -1032,7 +1032,7 @@ class ECSWorker(BaseWorker):
             "launchType", ECS_DEFAULT_LAUNCH_TYPE
         )
         if (
-            launch_type != "EC2"
+            launch_type not in ("EC2", "EXTERNAL")
             and "FARGATE" not in task_definition["requiresCompatibilities"]
         ):
             raise ValueError(
@@ -1458,7 +1458,7 @@ class ECSWorker(BaseWorker):
             # However, we will not enforce that here if the user has set it
             task_definition.setdefault("networkMode", "awsvpc")
 
-        elif launch_type == "EC2":
+        elif launch_type in ("EC2", "EXTERNAL"):
             # Container level memory and cpu are required when using ec2
             container.setdefault("cpu", cpu)
             container.setdefault("memory", memory)
